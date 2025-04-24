@@ -4,4 +4,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(RayTracer)
 
-add_executable(traceRays main.cpp scene.cpp ppm.cpp)
+add_executable(miosRenderer main.cpp scene.cpp ppm.cpp)
