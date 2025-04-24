@@ -13,9 +13,10 @@ using namespace std;
 
 class camera {
     public:
-        double  aspectRatio = 1.0;      // Ratio of image width over height
-        int     imageWidth = 100;       // Rendered image width in pixel count
+        double  aspectRatio     = 1.0;  // Ratio of image width over height
+        int     imageWidth      = 100;  // Rendered image width in pixel count
         int     samplesPerPixel = 10;   // Count of random samples per pixel
+        int     maxDepth        = 10;   // Maximum number of ray bounces into scene
     
         void render(const hittable& world) {
             initialize();
@@ -30,7 +31,7 @@ class camera {
                     color pixelColor(0, 0, 0);
                     for(int sample = 0; sample < samplesPerPixel; sample++) {
                         ray r = getRay(i, j);
-                        pixelColor += rayColor(r, world);
+                        pixelColor += rayColor(r, maxDepth, world);
                     }
                     image.push_back(pixelColor * pixelSamplesScale);
                 }
@@ -94,11 +95,17 @@ class camera {
             return vec3(randomDouble() - 0.5, randomDouble() - 0.5, 0);
         }
     
-        color rayColor(const ray& r, const hittable& world) const {
+        color rayColor(const ray& r, int depth, const hittable& world) const {
+            // If we exceed the ray bounce limit, no more light is gathered.
+            if(depth <= 0)
+                return color(0, 0, 0);
+            
             hitRecord rec;
             
-            if(world.hit(r, interval(0, infinity), rec))
-                return (rec.normal + color(1, 1, 1)) * 0.5;
+            if(world.hit(r, interval(0.001, infinity), rec)) {
+                vec3 direction = rec.normal + randomUnitVector();
+                return rayColor(ray(rec.p, direction), depth - 1, world) * 0.5;
+            }
             
             vec3 unitDirection = (r.direction()).normalize();
             auto a = 0.5 * (unitDirection.y + 1.0);
