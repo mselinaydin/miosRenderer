@@ -8,6 +8,7 @@
 #include "hittable.h"
 #include "ppm.h"
 #include "color.h"
+#include "material.h"
 #include <vector>
 
 using namespace std;
@@ -107,8 +108,11 @@ class camera {
             hitRecord rec;
             
             if(world.hit(r, interval(0.001, infinity), rec)) {
-                vec3 direction = rec.normal + randomUnitVector();
-                return rayColor(ray(rec.p, direction), depth - 1, world) * 0.7;
+                ray scattered;
+                color attenuation;
+                if(rec.mat->scatter(r, rec, attenuation, scattered))
+                    return attenuation * rayColor(scattered, depth - 1, world);
+                return color(0, 0, 0);
             }
             
             vec3 unitDirection = (r.direction()).normalize();

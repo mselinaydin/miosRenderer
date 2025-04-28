@@ -31,6 +31,11 @@ struct vec3 {
     vec3 normalize() const { double len = std::sqrt(x*x + y*y + z*z); return {x/len, y/len, z/len}; }
     double dot(const vec3& v) const { return x * v.x + y * v.y + z * v.z; }
     double lengthSquared() const { return x * x + y * y + z * z; }
+    bool nearZero() const {
+        // Return true if the vector is close to zero in all dimensions.
+        auto s = 1e-8;
+        return (std::fabs(x < s)) && (std::fabs(y < s)) && (std::fabs(z < s));
+    }
     static vec3 random() {
         return vec3(randomDouble(), randomDouble(), randomDouble());
     }
@@ -42,6 +47,17 @@ struct vec3 {
 using point3 = vec3;
 
 using color = vec3;
+
+// Vector utility functions
+
+inline vec3 operator*(const vec3& u, const vec3& v) {
+    return vec3(u.x * v.x, u.y * v.y, u.z * v.z);
+}
+
+inline vec3 operator*(double t, const vec3& v) {
+    return vec3(t * v.x, t * v.y, t * v.z);
+}
+
 
 inline vec3 randomUnitVector() {
     while(true) {
@@ -58,6 +74,10 @@ inline vec3 randomOnHemisphere(const vec3& normal) {
         return onUnitSphere;
     else
         return -onUnitSphere;
+}
+
+inline vec3 reflect(const vec3& v, const vec3& n) {
+    return v - v.dot(n) * n * 2;
 }
 
 #endif /* vec3_h */
