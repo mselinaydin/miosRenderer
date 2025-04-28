@@ -28,13 +28,12 @@ color getColor(const color& pixelColor) {
     b = linearToGamma(b);
     
     // Translate the [0, 1] component values to the byte range [0, 255]
-//    static const interval intensity(0.000, 0.999);
-//    int rbyte = int(256 * intensity.clamp(r));
-//    int gbyte = int(256 * intensity.clamp(g));
-//    int bbyte = int(256 * intensity.clamp(b));
-//
-//    return color(rbyte, gbyte, bbyte);
-    return color(r, g, b);
+    static const interval intensity(0.000, 0.999);
+    int rbyte = int(256 * intensity.clamp(r));
+    int gbyte = int(256 * intensity.clamp(g));
+    int bbyte = int(256 * intensity.clamp(b));
+
+    return color(rbyte, gbyte, bbyte);
 }
 
 #endif /* color_h */
