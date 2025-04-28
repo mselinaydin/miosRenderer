@@ -7,6 +7,7 @@
 
 #include "hittable.h"
 #include "ppm.h"
+#include "color.h"
 #include <vector>
 
 using namespace std;
@@ -33,7 +34,10 @@ class camera {
                         ray r = getRay(i, j);
                         pixelColor += rayColor(r, maxDepth, world);
                     }
-                    image.push_back(pixelColor * pixelSamplesScale);
+                    
+                    color finalColor = getColor(pixelColor * pixelSamplesScale);
+                    
+                    image.push_back(finalColor);
                 }
             }
             
@@ -104,7 +108,7 @@ class camera {
             
             if(world.hit(r, interval(0.001, infinity), rec)) {
                 vec3 direction = rec.normal + randomUnitVector();
-                return rayColor(ray(rec.p, direction), depth - 1, world) * 0.5;
+                return rayColor(ray(rec.p, direction), depth - 1, world) * 0.7;
             }
             
             vec3 unitDirection = (r.direction()).normalize();
