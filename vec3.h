@@ -30,7 +30,11 @@ struct vec3 {
     
     vec3 normalize() const { double len = std::sqrt(x*x + y*y + z*z); return {x/len, y/len, z/len}; }
     double dot(const vec3& v) const { return x * v.x + y * v.y + z * v.z; }
+    vec3 cross(const vec3& v) const { return vec3(y * v.z - z * v.y,
+                                                  z * v.x - x * v.z,
+                                                  x * v.y - y * v.x); }
     double lengthSquared() const { return x * x + y * y + z * z; }
+    double length() const { return std::sqrt(lengthSquared()); }
     bool nearZero() const {
         // Return true if the vector is close to zero in all dimensions.
         auto s = 1e-8;
