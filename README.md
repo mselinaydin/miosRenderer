@@ -1,3 +1,6 @@
+An implementation of Ray Tracing in One Weekend, as decribed here: https://raytracing.github.io/books/RayTracingInOneWeekend.html
+
+
 To run the project:
 Go to root directory of the project in terminal and do these
 
