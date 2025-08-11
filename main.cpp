@@ -9,6 +9,8 @@
 #include "hittableList.h"
 #include "material.h"
 #include "sphere.h"
+#include <iostream>
+#include <cstring>
 
 
 using namespace std;
@@ -77,6 +79,14 @@ int main (int argc, char *argv[])
     cam.defocusAngle    = 0.6;
     cam.focusDist       = 10.0;
     
+    cam.doDenoise       = false;
+    
+    for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "-d") == 0) {
+            cam.doDenoise = true;
+            std::cout << "Denoising enabled\n";
+        }
+    }
     // Keeping simple scene for debugging purposes
     
 //    auto materialGround = make_shared<lambertian>(color(0.8, 0.8, 0.0));

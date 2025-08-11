@@ -26,8 +26,10 @@ class camera {
         point3  lookAt          = point3(0, 0, -1); // Point camera is looking at
         vec3    vup             = vec3(0, 1, 0);    // Camera-relative "up" direction
     
-        double  defocusAngle    = 0;    // Variation angle of rays through each pixel
-        double  focusDist       = 10;   // Distance from camera lookFrom point to plane of perfect focus
+        double  defocusAngle    = 0;     // Variation angle of rays through each pixel
+        double  focusDist       = 10;    // Distance from camera lookFrom point to plane of perfect focus
+    
+        bool    doDenoise       = false; // Option to turn on Intel OIDN denoising
     
         void render(const hittable& world) {
             initialize();
@@ -35,7 +37,7 @@ class camera {
             std::cout << "Image Width: " << imageWidth << " Image Height: " << imageHeight << endl;
             
             vector<vec3> image;
-            string outFile = "outFile.ppm";
+            string outFile = "outputImage.ppm";
             
             for(int j = 0; j < imageHeight; j++) {
                 for(int i = 0; i < imageWidth; i++) {
@@ -54,12 +56,15 @@ class camera {
             // Write rendered image to file
             writePPM(outFile, image, imageWidth, imageHeight);
             
-            // Denoise image using oidn
-            denoiseImage(image, imageWidth, imageHeight);
-            
-            // Write denoised image to file
-            string outFile2 = "denoisedImage.ppm";
-            writePPM(outFile2, image, imageWidth, imageHeight);
+            // Denoise with oidn if turned on
+            if(doDenoise) {
+                // Denoise image using oidn
+                denoiseImage(image, imageWidth, imageHeight);
+                
+                // Write denoised image to file
+                string outFile2 = "denoisedOutputImage.ppm";
+                writePPM(outFile2, image, imageWidth, imageHeight);
+            }
         }
     
     private:
