@@ -10,6 +10,7 @@
 #include "color.h"
 #include "material.h"
 #include <vector>
+#include "denoise.h"
 
 using namespace std;
 
@@ -50,7 +51,15 @@ class camera {
                 }
             }
             
+            // Write rendered image to file
             writePPM(outFile, image, imageWidth, imageHeight);
+            
+            // Denoise image using oidn
+            denoiseImage(image, imageWidth, imageHeight);
+            
+            // Write denoised image to file
+            string outFile2 = "denoisedImage.ppm";
+            writePPM(outFile2, image, imageWidth, imageHeight);
         }
     
     private:
